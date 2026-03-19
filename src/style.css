@@ -1,0 +1,305 @@
+/* ===== 全局样式 ===== */
+:root {
+  --primary-color: #409eff;
+  --primary-dark: #337ecc;
+  --bg-dark: #0f1923;
+  --bg-card: #1a2332;
+  --bg-card-hover: #1e2a3a;
+  --text-primary: #e0e6ed;
+  --text-secondary: #8a9bb5;
+  --border-color: #2a3a4e;
+  --success-color: #67c23a;
+  --warning-color: #e6a23c;
+  --danger-color: #f56c6c;
+  --info-color: #909399;
+  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  --gradient-danger: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
+  --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
+
+  /* ===== Element Plus 全局暗色 Token（修复黑字看不清） ===== */
+  --el-text-color-primary: var(--text-primary);
+  --el-text-color-regular: var(--text-primary);
+  --el-text-color-secondary: var(--text-secondary);
+  --el-text-color-placeholder: #6b7a93;
+
+  --el-bg-color: var(--bg-dark);
+  --el-bg-color-overlay: var(--bg-card);
+  --el-fill-color-blank: var(--bg-card);
+  --el-fill-color-light: var(--bg-card-hover);
+  --el-fill-color-lighter: var(--bg-card-hover);
+
+  --el-border-color: var(--border-color);
+  --el-border-color-light: var(--border-color);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* ===== 全局暗色主题覆盖 ElementPlus ===== */
+.el-menu {
+  background-color: var(--bg-card) !important;
+  border-right: 1px solid var(--border-color) !important;
+}
+
+.el-menu-item,
+.el-sub-menu__title {
+  color: var(--text-secondary) !important;
+}
+
+.el-menu-item:hover,
+.el-menu-item.is-active {
+  color: var(--text-primary) !important;
+  background-color: var(--bg-card-hover) !important;
+}
+
+.el-card {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+  box-shadow: var(--shadow-card) !important;
+  transition: all 0.3s ease;
+}
+
+.el-card:hover {
+  box-shadow: var(--shadow-hover) !important;
+  transform: translateY(-2px);
+}
+
+.el-card__header {
+  border-bottom-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600;
+}
+
+/* ===== 深色表格 ===== */
+/* ===== 深色表格（补齐 striped / current-row） ===== */
+.el-table {
+  --el-table-bg-color: var(--bg-card) !important;
+  --el-table-header-bg-color: #1e2a3a !important;
+  --el-table-tr-bg-color: var(--bg-card) !important;
+
+  /* 关键：条纹行背景（不设的话默认是浅色） */
+  --el-table-striped-bg-color: #162030 !important;
+
+  /* hover 行背景 */
+  --el-table-row-hover-bg-color: var(--bg-card-hover) !important;
+
+  /* 关键：当前选中行背景（不设的话默认是浅色） */
+  --el-table-current-row-bg-color: var(--bg-card-hover) !important;
+
+  --el-table-text-color: var(--text-primary) !important;
+  --el-table-header-text-color: var(--text-secondary) !important;
+  --el-table-border-color: var(--border-color) !important;
+}
+
+/* 兜底：某些 Element Plus 版本会用 class 直接写背景，强制覆盖 */
+.el-table--striped .el-table__body tr.el-table__row--striped > td {
+  background-color: var(--el-table-striped-bg-color) !important;
+}
+
+.el-table__body tr.current-row > td {
+  background-color: var(--el-table-current-row-bg-color) !important;
+}
+
+/* 再兜底：确保 td 默认就是暗色，避免个别列/空状态变白 */
+.el-table td.el-table__cell {
+  background-color: transparent !important;
+}
+
+/* 可选：表格空数据块也做暗色适配 */
+.el-table__empty-block {
+  background-color: var(--bg-card) !important;
+}
+
+/* ===== 布局样式 ===== */
+.layout-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: var(--bg-card);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--gradient-primary);
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.top-bar {
+  height: 60px;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  justify-content: space-between;
+}
+
+.top-bar h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.page-container {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+/* ===== 统计卡片 ===== */
+.stat-card {
+  text-align: center;
+  padding: 20px;
+}
+
+.stat-card .stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-card .stat-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* ===== 表单深色 ===== */
+.el-input__wrapper,
+.el-textarea__inner {
+  background-color: #1e2a3a !important;
+  box-shadow: 0 0 0 1px var(--border-color) inset !important;
+}
+
+.el-input__inner,
+.el-textarea__inner {
+  color: var(--text-primary) !important;
+}
+
+.el-form-item__label {
+  color: var(--text-secondary) !important;
+}
+
+/* ===== 对话框深色 ===== */
+.el-dialog {
+  background-color: var(--bg-card) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 12px !important;
+}
+
+.el-dialog__title {
+  color: var(--text-primary) !important;
+}
+
+/* ===== 动画 ===== */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.slide-enter-from {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+.slide-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
+}
+
+/* ===== 地图容器 ===== */
+.map-container {
+  width: 100%;
+  height: 500px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+/* ===== 按钮渐变 ===== */
+.btn-gradient {
+  background: var(--gradient-primary) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.btn-gradient:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* ===== 渐变文字 ===== */
+.gradient-text {
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== Select 深色 ===== */
+.el-select-dropdown {
+  background-color: var(--bg-card) !important;
+  border-color: var(--border-color) !important;
+}
+
+.el-select-dropdown__item {
+  color: var(--text-primary) !important;
+}
+
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: var(--bg-card-hover) !important;
+}
