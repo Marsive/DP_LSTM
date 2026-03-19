@@ -11,8 +11,8 @@
     <!-- 侧边栏 -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <img src="/dp_lstm.svg" alt="logo" style="width: 24px; height: 24px; margin-right: 8px;" />
-        DP-LSTM 隐私保护
+        <div class="logo-icon"></div>
+        <span class="logo-text">DP-LSTM 分析台</span>
       </div>
       <el-menu
         :default-active="currentRoute"
@@ -35,15 +35,14 @@
       <header class="top-bar">
         <div class="top-bar-left">
           <h2>{{ currentTitle }}</h2>
-          <el-tag type="info" effect="dark" round style="margin-left: 12px">
-            车联网路径隐私保护系统
-          </el-tag>
         </div>
         
         <div class="top-bar-right">
           <el-dropdown @command="handleCommand" trigger="click">
             <span class="user-dropdown">
-              <el-avatar :size="32" icon="UserFilled" class="user-avatar" />
+              <el-avatar :size="30" class="user-avatar">
+                <el-icon><UserFilled /></el-icon>
+              </el-avatar>
               <span class="username">{{ username }}</span>
               <el-icon class="el-icon--right"><ArrowDown /></el-icon>
             </span>
@@ -79,7 +78,6 @@ const currentRoute = computed(() => route.path)
 const currentTitle = computed(() => (route.meta?.title as string) || '总控台')
 const username = computed(() => localStorage.getItem('username') || 'admin')
 
-// 菜单路由（从 router 配置中提取有 meta.title 的路由）
 const menuRoutes = [
   { path: '/dashboard', meta: { title: '总控台', icon: 'Odometer' } },
   { path: '/data-simulation', meta: { title: '数据模拟', icon: 'MapLocation' } },
@@ -99,50 +97,100 @@ const handleCommand = (command: string) => {
 </script>
 
 <style scoped>
+.sidebar {
+  width: 240px;
+  background-color: #FFFFFF;
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-logo {
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.logo-icon {
+  width: 20px;
+  height: 20px;
+  background-color: var(--primary-color);
+  border-radius: 4px;
+  margin-right: 12px;
+}
+
+.logo-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
 .sidebar-menu {
-  border-right: none;
-  flex: 1;
-  padding-top: 8px;
+  padding: 16px 12px;
 }
 
 .sidebar-menu .el-menu-item {
-  height: 48px;
-  line-height: 48px;
-  margin: 4px 8px;
+  height: 44px;
+  line-height: 44px;
+  margin-bottom: 4px;
   border-radius: 8px;
   font-size: 14px;
+  color: var(--text-secondary) !important;
+  transition: all 0.2s;
+}
+
+.sidebar-menu .el-menu-item:hover {
+  background-color: #F8FAFC !important;
+  color: var(--text-primary) !important;
 }
 
 .sidebar-menu .el-menu-item.is-active {
-  background: linear-gradient(135deg, rgba(102,126,234,0.2), rgba(118,75,162,0.2)) !important;
-  color: #667eea !important;
+  background-color: #EEF2FF !important;
+  color: var(--primary-color) !important;
+  font-weight: 500;
 }
 
-.top-bar-left, .top-bar-right {
+.top-bar {
+  height: 60px;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
+  padding: 0 32px;
+  justify-content: space-between;
+}
+
+.top-bar h2 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
 }
 
 .user-dropdown {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 8px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
   transition: background-color 0.3s;
 }
 
 .user-dropdown:hover {
-  background-color: var(--bg-card-hover);
+  background-color: #F8FAFC;
 }
 
 .user-avatar {
-  background: var(--gradient-primary);
+  background-color: #EEF2FF;
+  color: var(--primary-color);
   margin-right: 8px;
 }
 
 .username {
-  color: var(--text-primary);
+  color: var(--text-regular);
   font-size: 14px;
   font-weight: 500;
 }

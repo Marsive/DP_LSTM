@@ -1,37 +1,43 @@
-/* ===== 全局样式 ===== */
+/* ===== 全局样式与 B端设计 Token ===== */
 :root {
-  --primary-color: #409eff;
-  --primary-dark: #337ecc;
-  --bg-dark: #0f1923;
-  --bg-card: #1a2332;
-  --bg-card-hover: #1e2a3a;
-  --text-primary: #e0e6ed;
-  --text-secondary: #8a9bb5;
-  --border-color: #2a3a4e;
-  --success-color: #67c23a;
-  --warning-color: #e6a23c;
-  --danger-color: #f56c6c;
-  --info-color: #909399;
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-  --gradient-danger: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --shadow-hover: 0 8px 32px rgba(0, 0, 0, 0.4);
+  /* 品牌色与状态色 */
+  --primary-color: #4F7CFF;
+  --success-color: #10B981;
+  --warning-color: #F59E0B;
+  --danger-color: #EF4444;
+  --info-color: #0EA5E9;
+  
+  /* 灰度与背景体系 */
+  --bg-dark: #F6F8FC;     /* 页面底色 */
+  --bg-card: #FFFFFF;     /* 卡片底色 */
+  --bg-card-hover: #F8FAFC;
+  --border-color: #E5EAF2;
+  
+  /* 文字层级 */
+  --text-primary: #0F172A; /* 大标题、主数字 */
+  --text-regular: #334155; /* 正文文本 */
+  --text-secondary: #64748B; /* 次要描述、标签 */
+  
+  /* 阴影与圆角 */
+  --shadow-card: 0 2px 12px rgba(15, 23, 42, 0.03);
+  --shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.08);
 
-  /* ===== Element Plus 全局暗色 Token（修复黑字看不清） ===== */
+  /* ===== Element Plus 全局 Token 覆盖 ===== */
+  --el-color-primary: var(--primary-color);
   --el-text-color-primary: var(--text-primary);
-  --el-text-color-regular: var(--text-primary);
+  --el-text-color-regular: var(--text-regular);
   --el-text-color-secondary: var(--text-secondary);
-  --el-text-color-placeholder: #6b7a93;
+  --el-text-color-placeholder: #94A3B8;
 
-  --el-bg-color: var(--bg-dark);
+  --el-bg-color: var(--bg-card);
+  --el-bg-color-page: var(--bg-dark);
   --el-bg-color-overlay: var(--bg-card);
   --el-fill-color-blank: var(--bg-card);
-  --el-fill-color-light: var(--bg-card-hover);
-  --el-fill-color-lighter: var(--bg-card-hover);
-
+  
   --el-border-color: var(--border-color);
-  --el-border-color-light: var(--border-color);
+  --el-border-color-light: #F1F5F9;
+  
+  --el-border-radius-base: 8px;
 }
 
 * {
@@ -41,9 +47,9 @@
 }
 
 body {
-  font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   background-color: var(--bg-dark);
-  color: var(--text-primary);
+  color: var(--text-regular);
   min-height: 100vh;
 }
 
@@ -51,23 +57,7 @@ body {
   min-height: 100vh;
 }
 
-/* ===== 全局暗色主题覆盖 ElementPlus ===== */
-.el-menu {
-  background-color: var(--bg-card) !important;
-  border-right: 1px solid var(--border-color) !important;
-}
-
-.el-menu-item,
-.el-sub-menu__title {
-  color: var(--text-secondary) !important;
-}
-
-.el-menu-item:hover,
-.el-menu-item.is-active {
-  color: var(--text-primary) !important;
-  background-color: var(--bg-card-hover) !important;
-}
-
+/* ===== 核心组件重置 (卡片) ===== */
 .el-card {
   background-color: var(--bg-card) !important;
   border: 1px solid var(--border-color) !important;
@@ -78,80 +68,49 @@ body {
 
 .el-card:hover {
   box-shadow: var(--shadow-hover) !important;
-  transform: translateY(-2px);
 }
 
 .el-card__header {
   border-bottom-color: var(--border-color) !important;
   color: var(--text-primary) !important;
   font-weight: 600;
+  padding: 16px 20px !important;
 }
 
-/* ===== 深色表格 ===== */
-/* ===== 深色表格（补齐 striped / current-row） ===== */
+/* ===== 表单重置 (去掉强制深色) ===== */
+.el-input__wrapper,
+.el-textarea__wrapper {
+  background-color: #FFFFFF !important;
+  box-shadow: 0 0 0 1px var(--border-color) inset !important;
+}
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1px var(--primary-color) inset !important;
+}
+.el-input__inner,
+.el-textarea__inner {
+  color: var(--text-primary) !important;
+}
+
+/* ===== 表格重置 (亮色模式) ===== */
 .el-table {
-  --el-table-bg-color: var(--bg-card) !important;
-  --el-table-header-bg-color: #1e2a3a !important;
-  --el-table-tr-bg-color: var(--bg-card) !important;
-
-  /* 关键：条纹行背景（不设的话默认是浅色） */
-  --el-table-striped-bg-color: #162030 !important;
-
-  /* hover 行背景 */
-  --el-table-row-hover-bg-color: var(--bg-card-hover) !important;
-
-  /* 关键：当前选中行背景（不设的话默认是浅色） */
-  --el-table-current-row-bg-color: var(--bg-card-hover) !important;
-
-  --el-table-text-color: var(--text-primary) !important;
-  --el-table-header-text-color: var(--text-secondary) !important;
-  --el-table-border-color: var(--border-color) !important;
+  --el-table-bg-color: #FFFFFF;
+  --el-table-header-bg-color: #F8FAFC;
+  --el-table-tr-bg-color: #FFFFFF;
+  --el-table-striped-bg-color: #F8FAFC;
+  --el-table-row-hover-bg-color: #F1F5F9;
+  --el-table-border-color: var(--border-color);
+  --el-table-text-color: var(--text-regular);
+  --el-table-header-text-color: var(--text-secondary);
+}
+.el-table th.el-table__cell {
+  font-weight: 600 !important;
+  border-bottom: 1px solid var(--border-color) !important;
 }
 
-/* 兜底：某些 Element Plus 版本会用 class 直接写背景，强制覆盖 */
-.el-table--striped .el-table__body tr.el-table__row--striped > td {
-  background-color: var(--el-table-striped-bg-color) !important;
-}
-
-.el-table__body tr.current-row > td {
-  background-color: var(--el-table-current-row-bg-color) !important;
-}
-
-/* 再兜底：确保 td 默认就是暗色，避免个别列/空状态变白 */
-.el-table td.el-table__cell {
-  background-color: transparent !important;
-}
-
-/* 可选：表格空数据块也做暗色适配 */
-.el-table__empty-block {
-  background-color: var(--bg-card) !important;
-}
-
-/* ===== 布局样式 ===== */
+/* ===== 布局结构 ===== */
 .layout-container {
   display: flex;
   min-height: 100vh;
-}
-
-.sidebar {
-  width: 220px;
-  background-color: var(--bg-card);
-  border-right: 1px solid var(--border-color);
-  display: flex;
-  flex-direction: column;
-}
-
-.sidebar-logo {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid var(--border-color);
-  background: var(--gradient-primary);
-  color: white;
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 1px;
 }
 
 .main-content {
@@ -159,105 +118,32 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-}
-
-.top-bar {
-  height: 60px;
-  background-color: var(--bg-card);
-  border-bottom: 1px solid var(--border-color);
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  justify-content: space-between;
-}
-
-.top-bar h2 {
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--text-primary);
+  background-color: var(--bg-dark);
 }
 
 .page-container {
   flex: 1;
-  padding: 24px;
+  padding: 24px 32px;
   overflow-y: auto;
 }
 
-/* ===== 统计卡片 ===== */
-.stat-card {
-  text-align: center;
-  padding: 20px;
+/* ===== 按钮风格化 ===== */
+.el-button {
+  font-weight: 500;
+  border-radius: 8px !important;
 }
-
-.stat-card .stat-value {
-  font-size: 32px;
-  font-weight: 700;
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.stat-card .stat-label {
-  font-size: 13px;
-  color: var(--text-secondary);
-  margin-top: 8px;
-}
-
-/* ===== 表单深色 ===== */
-.el-input__wrapper,
-.el-textarea__inner {
-  background-color: #1e2a3a !important;
-  box-shadow: 0 0 0 1px var(--border-color) inset !important;
-}
-
-.el-input__inner,
-.el-textarea__inner {
-  color: var(--text-primary) !important;
-}
-
-.el-form-item__label {
-  color: var(--text-secondary) !important;
-}
-
-/* ===== 对话框深色 ===== */
-.el-dialog {
-  background-color: var(--bg-card) !important;
-  border: 1px solid var(--border-color) !important;
-  border-radius: 12px !important;
-}
-
-.el-dialog__title {
-  color: var(--text-primary) !important;
-}
-
-/* ===== 动画 ===== */
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.slide-enter-active,
-.slide-leave-active {
+.btn-gradient {
+  background: var(--primary-color) !important;
+  border: none !important;
+  color: white !important;
   transition: all 0.3s ease;
 }
-
-.slide-enter-from {
-  transform: translateX(20px);
-  opacity: 0;
+.btn-gradient:hover {
+  opacity: 0.9;
+  box-shadow: 0 4px 12px rgba(79, 124, 255, 0.25);
 }
 
-.slide-leave-to {
-  transform: translateX(-20px);
-  opacity: 0;
-}
-
-/* ===== 地图容器 ===== */
+/* ===== 深色图表与地图的备用还原 ===== */
 .map-container {
   width: 100%;
   height: 500px;
@@ -266,40 +152,8 @@ body {
   border: 1px solid var(--border-color);
 }
 
-/* ===== 按钮渐变 ===== */
-.btn-gradient {
-  background: var(--gradient-primary) !important;
-  border: none !important;
-  color: white !important;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-gradient:hover {
-  opacity: 0.9;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
-}
-
-/* ===== 渐变文字 ===== */
-.gradient-text {
-  background: var(--gradient-primary);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ===== Select 深色 ===== */
-.el-select-dropdown {
-  background-color: var(--bg-card) !important;
-  border-color: var(--border-color) !important;
-}
-
-.el-select-dropdown__item {
-  color: var(--text-primary) !important;
-}
-
-.el-select-dropdown__item.hover,
-.el-select-dropdown__item:hover {
-  background-color: var(--bg-card-hover) !important;
+/* 导航相关重置 */
+.el-menu {
+  background-color: transparent !important;
+  border-right: none !important;
 }
