@@ -11,7 +11,7 @@
     <!-- 侧边栏 -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <div class="logo-icon"></div>
+        <img src="/logo.png" alt="logo" class="logo-img-small" />
         <span class="logo-text">DP-LSTM 分析台</span>
       </div>
       <el-menu
@@ -113,12 +113,13 @@ const handleCommand = (command: string) => {
   border-bottom: 1px solid var(--border-color);
 }
 
-.logo-icon {
-  width: 20px;
-  height: 20px;
-  background-color: var(--primary-color);
-  border-radius: 4px;
+.logo-img-small {
+  width: 28px;
+  height: 28px;
   margin-right: 12px;
+  border-radius: 6px;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .logo-text {

@@ -9,20 +9,20 @@
             轨迹生成参数
           </template>
           <el-form label-position="top" :model="config" size="default">
-            <el-form-item label="车辆数量">
-              <el-input-number v-model="config.vehicleCount" :min="1" :max="500" />
+            <el-form-item label="车辆数量 (辆)">
+              <el-input-number v-model="config.vehicleCount" :min="1" :max="500" controls-position="right" style="width: 100%;" />
             </el-form-item>
-            <el-form-item label="时间步数">
-              <el-input-number v-model="config.timeSteps" :min="10" :max="1000" />
+            <el-form-item label="时间步数 (Step)">
+              <el-input-number v-model="config.timeSteps" :min="10" :max="1000" controls-position="right" style="width: 100%;" />
             </el-form-item>
-            <el-form-item label="采样间隔（秒）">
-              <el-input-number v-model="config.samplingInterval" :min="1" :max="60" />
+            <el-form-item label="采样时间间隔 (秒)">
+              <el-input-number v-model="config.samplingInterval" :min="1" :max="60" controls-position="right" style="width: 100%;" />
             </el-form-item>
-            <el-form-item label="路网网格行数">
-              <el-input-number v-model="config.gridRows" :min="5" :max="50" />
+            <el-form-item label="路网空间划分行数 (X 轴)">
+              <el-input-number v-model="config.gridRows" :min="5" :max="50" controls-position="right" style="width: 100%;" />
             </el-form-item>
-            <el-form-item label="路网网格列数">
-              <el-input-number v-model="config.gridCols" :min="5" :max="50" />
+            <el-form-item label="路网空间划分列数 (Y 轴)">
+              <el-input-number v-model="config.gridCols" :min="5" :max="50" controls-position="right" style="width: 100%;" />
             </el-form-item>
             <el-form-item label="速度范围（km/h）">
               <el-slider
@@ -33,16 +33,16 @@
                 :marks="{ 0: '0', 60: '60', 120: '120' }"
               />
             </el-form-item>
-            <el-form-item>
+            <el-form-item style="margin-top: 30px;">
               <el-button
                 type="primary"
                 class="btn-gradient"
                 @click="generateData"
                 :loading="generating"
-                style="width: 100%;"
+                style="width: 100%; height: 42px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 15px rgba(64, 158, 255, 0.3);"
               >
-                <el-icon style="margin-right: 4px;"><VideoPlay /></el-icon>
-                生成轨迹数据
+                <el-icon style="margin-right: 6px; font-size: 16px;"><VideoPlay /></el-icon>
+                生成时空仿真轨迹
               </el-button>
             </el-form-item>
           </el-form>
@@ -84,8 +84,8 @@
             </el-table-column>
             <el-table-column label="操作" width="120">
               <template #default="{ row }">
-                <el-button size="small" type="primary" link @click="viewTrajectory(row.id)">
-                  查看
+                <el-button size="small" type="primary" link @click="viewTrajectory(row.id, row.isProtected, row.originalTrajectoryId)">
+                  查看轨迹对比
                 </el-button>
               </template>
             </el-table-column>
@@ -139,9 +139,11 @@ onMounted(async () => {
 
 function initMap() {
   if (map) return
-  map = L.map('trajectory-map').setView([39.9042, 116.4074], 14)
+  map = L.map('trajectory-map', { preferCanvas: true }).setView([39.9042, 116.4074], 14)
+  // 按照用户要求，恢复契合目前整体 Light 亮色主题的地图瓦片
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap',
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
   }).addTo(map)
   trajLayers = L.layerGroup().addTo(map)
 }
@@ -183,12 +185,75 @@ async function generateData() {
   }
 }
 
-async function viewTrajectory(id: number) {
+async function viewTrajectory(id: number, isProtected: boolean = false, originalId?: number) {
   if (trajLayers) trajLayers.clearLayers()
-  await showTrajectoryOnMap(id, COLORS[0])
+  
+  if (isProtected && originalId) {
+    // 双轨对比全息模式：同时渲染原始轨迹与保护后轨迹
+    await showDualTrajectoryOnMap(originalId, id)
+  } else {
+    // 单轨渲染
+    await showTrajectoryOnMap(id, '#409EFF', '原始真实轨迹')
+  }
 }
 
-async function showTrajectoryOnMap(id: number, color: string) {
+async function showDualTrajectoryOnMap(origId: number, protectedId: number) {
+  try {
+    const resOrig = await trajectoryApi.getDetail(origId)
+    const pointsOrig = resOrig.data?.data?.points ?? []
+    
+    const resProt = await trajectoryApi.getDetail(protectedId)
+    const pointsProt = resProt.data?.data?.points ?? []
+
+    if (!pointsOrig.length || !pointsProt.length || !map) return
+
+    // 绘制原始轨迹 (主题蓝)
+    const latlngsOrig = pointsOrig.map((p: any) => [p.latitude, p.longitude] as [number, number])
+    const polylineOrig = L.polyline(latlngsOrig, {
+      color: '#409EFF',
+      weight: 4,
+      opacity: 0.9,
+      dashArray: '5, 8'
+    })
+
+    // 绘制被DP污染的轨迹 (主题红)
+    const latlngsProt = pointsProt.map((p: any) => [p.latitude, p.longitude] as [number, number])
+    const polylineProt = L.polyline(latlngsProt, {
+      color: '#F56C6C',
+      weight: 3,
+      opacity: 0.7,
+    })
+
+    if (trajLayers) {
+      trajLayers.addLayer(polylineOrig)
+      trajLayers.addLayer(polylineProt)
+
+      // 仅标记原始起点/终点作锚点对比
+      const startMarker = L.circleMarker(latlngsOrig[0], {
+        radius: 6, fillColor: '#409EFF', fillOpacity: 1, weight: 2, color: '#fff',
+      }).bindTooltip("真实起点")
+      trajLayers.addLayer(startMarker)
+
+      const endMarker = L.circleMarker(latlngsOrig[latlngsOrig.length - 1], {
+        radius: 6, fillColor: '#E6A23C', fillOpacity: 1, weight: 2, color: '#fff',
+      }).bindTooltip("真实终点")
+      trajLayers.addLayer(endMarker)
+
+      // 在被保护的终点做发散标定
+      const protEndMarker = L.circleMarker(latlngsProt[latlngsProt.length - 1], {
+        radius: 8, fillColor: '#F56C6C', fillOpacity: 0.8, weight: 1, color: '#fff',
+      }).bindTooltip("DP模糊后终点")
+      trajLayers.addLayer(protEndMarker)
+    }
+
+    const bounds = L.latLngBounds([...latlngsOrig, ...latlngsProt])
+    map.fitBounds(bounds, { padding: [50, 50] })
+  } catch {
+    ElMessage.error('加载双轨对比详情失败')
+  }
+}
+
+async function showTrajectoryOnMap(id: number, color: string, tooltipText: string = "轨迹") {
   try {
     const res = await trajectoryApi.getDetail(id)
     const points = res.data?.data?.points ?? []
@@ -199,18 +264,16 @@ async function showTrajectoryOnMap(id: number, color: string) {
       color,
       weight: 3,
       opacity: 0.8,
-    })
+    }).bindTooltip(tooltipText)
 
     if (trajLayers) {
       trajLayers.addLayer(polyline)
-      // 起点标记
       const startMarker = L.circleMarker(latlngs[0], {
-        radius: 6, fillColor: '#43e97b', fillOpacity: 1, weight: 2, color: '#fff',
+        radius: 6, fillColor: '#409EFF', fillOpacity: 1, weight: 2, color: '#fff',
       })
       trajLayers.addLayer(startMarker)
-      // 终点标记
       const endMarker = L.circleMarker(latlngs[latlngs.length - 1], {
-        radius: 6, fillColor: '#f5576c', fillOpacity: 1, weight: 2, color: '#fff',
+        radius: 6, fillColor: '#F56C6C', fillOpacity: 1, weight: 2, color: '#fff',
       })
       trajLayers.addLayer(endMarker)
     }

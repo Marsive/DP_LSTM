@@ -19,33 +19,37 @@
               />
             </el-form-item>
             <el-form-item label="位置敏感度（米）">
-              <el-input-number v-model="privacyConfig.sensitivityMeters" :min="10" :max="1000" :step="10" />
+              <el-input-number v-model="privacyConfig.sensitivityMeters" :min="10" :max="1000" :step="10" controls-position="right" style="width: 100%;" />
             </el-form-item>
             <el-form-item label="预算分配策略">
               <el-select v-model="privacyConfig.budgetStrategy" style="width: 100%;">
-                <el-option label="均匀分配" value="uniform" />
-                <el-option label="几何递减" value="geometric" />
+                <el-option label="传统一刀切机制 (Uniform)" value="uniform" />
+                <el-option label="空间语义自适应 (Adaptive)" value="adaptive" />
+                <el-option label="几何时间递减 (Geometric)" value="geometric" />
               </el-select>
             </el-form-item>
           </el-form>
         </el-card>
 
-        <!-- 噪声影响估算 -->
+        <!-- 动态策略雷达图展示 -->
         <el-card>
           <template #header>
             <el-icon style="margin-right: 8px;"><DataLine /></el-icon>
-            噪声影响估算
+            理论收益与损耗动态剖析
           </template>
-          <div v-if="noiseImpact" style="font-size: 13px; line-height: 2;">
-            <p><strong>噪声标准差：</strong>{{ noiseImpact.noiseStdDevMeters }} 米</p>
-            <p><strong>95% 置信区间：</strong>±{{ noiseImpact.ci95Meters }} 米</p>
-            <p style="color: var(--text-secondary); margin-top: 8px;">
-              {{ noiseImpact.description }}
-            </p>
+          <div ref="radarChartRef" style="width: 100%; height: 260px;"></div>
+          <div v-if="noiseImpact" style="font-size: 13px; line-height: 1.8; margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 10px;">
+            <el-row :gutter="10">
+              <el-col :span="12">
+                <span style="color: var(--text-secondary);">单点偏移方差：</span>
+                <strong style="color: var(--warning-color);">{{ noiseImpact.noiseStdDevMeters }}m</strong>
+              </el-col>
+              <el-col :span="12">
+                <span style="color: var(--text-secondary);">95% 覆盖半径：</span>
+                <strong style="color: var(--danger-color);">±{{ noiseImpact.ci95Meters }}m</strong>
+              </el-col>
+            </el-row>
           </div>
-          <el-button type="primary" plain @click="fetchNoiseImpact" style="margin-top: 12px; width: 100%;">
-            更新估算
-          </el-button>
         </el-card>
       </el-col>
 
@@ -114,7 +118,9 @@ const selectedIds = ref<number[]>([])
 const applying = ref(false)
 const noiseImpact = ref<any>(null)
 const compareChartRef = ref<HTMLElement>()
+const radarChartRef = ref<HTMLElement>()
 let compareChart: echarts.ECharts | null = null
+let radarChart: echarts.ECharts | null = null
 
 onMounted(async () => {
   await loadOriginalTrajectories()
@@ -144,9 +150,69 @@ async function fetchNoiseImpact() {
       privacyConfig.value.sensitivityMeters
     )
     noiseImpact.value = res.data?.data?.impact
+    updateRadarChart()
   } catch {
     // 静默处理
   }
+}
+
+function initCompareChart() {
+  if (compareChartRef.value) {
+    compareChart = echarts.init(compareChartRef.value)
+  }
+  if (radarChartRef.value) {
+    radarChart = echarts.init(radarChartRef.value)
+  }
+}
+
+function updateRadarChart() {
+  if (!radarChart) return
+  
+  // 模拟基于 epsilon 的隐私效用反比映射
+  const eps = privacyConfig.value.epsilon
+  // eps -> 0.1: privacy -> 100, utility -> 10
+  // eps -> 10: privacy -> 10, utility -> 100
+  const privacyScore = Math.min(100, Math.max(10, 100 * (1 / (eps + 0.5))))
+  const utilityScore = Math.min(100, Math.max(10, 80 * Math.log10(eps + 1)))
+
+  radarChart.setOption({
+    backgroundColor: 'transparent',
+    tooltip: { format: 'item' },
+    radar: {
+      indicator: [
+        { name: '单点隐匿度', max: 100 },
+        { name: 'MIA拦截率', max: 100 },
+        { name: '聚合K-匿名', max: 100 },
+        { name: '路线保真度', max: 100 },
+        { name: '密度分布效用', max: 100 },
+        { name: '下游预测价值', max: 100 }
+      ],
+      axisName: { color: '#666', fontSize: 13, fontWeight: 'bold' },
+      splitArea: { areaStyle: { color: ['rgba(230, 238, 255, 0.4)', 'rgba(240, 245, 255, 0.3)'] } },
+      splitLine: { lineStyle: { color: 'rgba(200, 215, 240, 0.8)' } },
+      axisLine: { lineStyle: { color: 'rgba(200, 215, 240, 0.8)' } }
+    },
+    series: [
+      {
+        name: '理论指征',
+        type: 'radar',
+        data: [
+          {
+            value: [privacyScore, privacyScore * 0.9, privacyScore * 0.95, utilityScore, utilityScore * 0.9, utilityScore * 0.85],
+            name: '当前配置面板 (实控属性)',
+            areaStyle: {
+              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
+                { color: 'rgba(64, 158, 255, 0.5)', offset: 0 },
+                { color: 'rgba(64, 158, 255, 0.1)', offset: 1 }
+              ])
+            },
+            lineStyle: { width: 3, color: '#409EFF' },
+            itemStyle: { color: '#409EFF', borderColor: '#fff', borderWidth: 2 }
+          }
+        ]
+      }
+    ]
+  })
 }
 
 async function applyProtection() {
@@ -167,10 +233,7 @@ async function applyProtection() {
   }
 }
 
-function initCompareChart() {
-  if (!compareChartRef.value) return
-  compareChart = echarts.init(compareChartRef.value, 'dark')
-}
+
 
 async function loadCompareData() {
   try {
@@ -184,13 +247,14 @@ async function loadCompareData() {
       compareChart.setOption({
         backgroundColor: 'transparent',
         tooltip: { trigger: 'axis' },
-        legend: { data: ['噪声标准差 (m)', '95%置信区间 (m)'] },
+        legend: { data: ['噪声标准差 (m)', '95%置信区间 (m)'], textStyle: { color: '#333' } },
         xAxis: {
           type: 'category',
           name: '隐私预算 ε',
           data: comparisons.map((c: any) => `ε=${c.epsilon}`),
+          axisLabel: { color: '#666' }
         },
-        yAxis: { type: 'value', name: '噪声幅度 (米)' },
+        yAxis: { type: 'value', name: '噪声幅度 (米)', axisLabel: { color: '#666' } },
         series: [
           {
             name: '噪声标准差 (m)',

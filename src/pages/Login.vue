@@ -1,10 +1,14 @@
 <template>
   <div class="login-container">
+    <!-- Abstract light background shapes -->
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
     <div class="login-box">
       <div class="login-header">
-        <img src="/dp_lstm.svg" class="logo-img" alt="logo" />
+        <img src="/logo.png" class="logo-img" alt="logo" />
         <h2>DP-LSTM 隐私保护系统</h2>
-        <p>欢迎回来，请登录您的账户</p>
+        <p>欢迎回到管理控制台</p>
       </div>
       
       <el-form 
@@ -13,17 +17,18 @@
         :rules="loginRules"
         class="login-form"
         @keyup.enter="handleLogin"
+        label-position="top"
       >
         <el-form-item prop="username">
           <el-input 
             v-model="loginForm.username" 
-            placeholder="请输入账号 ( admin )"
+            placeholder="请输入管理员账号 ( admin )"
             :prefix-icon="User"
             size="large"
           />
         </el-form-item>
         
-        <el-form-item prop="password">
+        <el-form-item prop="password" style="margin-top: 24px;">
           <el-input 
             v-model="loginForm.password" 
             type="password"
@@ -34,7 +39,7 @@
           />
         </el-form-item>
         
-        <el-form-item>
+        <el-form-item style="margin-top: 32px;">
           <el-button 
             type="primary" 
             class="login-btn btn-gradient"
@@ -46,12 +51,11 @@
           </el-button>
         </el-form-item>
       </el-form>
+      
+      <div class="login-footer">
+        <p>Data Privacy & Deep Learning System</p>
+      </div>
     </div>
-    
-    <!-- 动态背景球 -->
-    <div class="bg-shape shape-1"></div>
-    <div class="bg-shape shape-2"></div>
-    <div class="bg-shape shape-3"></div>
   </div>
 </template>
 
@@ -115,36 +119,38 @@ const handleLogin = async () => {
 }
 
 .login-box {
-  width: 420px;
-  padding: 40px;
-  background: rgba(26, 35, 50, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  width: 440px;
+  padding: 48px 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
   z-index: 10;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 
 .login-header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 32px;
 }
 
 .logo-img {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
   margin-bottom: 16px;
-  filter: drop-shadow(0 0 12px rgba(102, 126, 234, 0.6));
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 
 .login-header h2 {
-  font-size: 24px;
+  font-size: 22px;
   color: var(--text-primary);
   margin-bottom: 8px;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: 0.5px;
 }
 
 .login-header p {
@@ -153,63 +159,47 @@ const handleLogin = async () => {
 }
 
 .login-form {
-  margin-top: 20px;
+  margin-top: 8px;
 }
 
 .login-btn {
   width: 100%;
-  margin-top: 10px;
   font-size: 16px;
   border-radius: 8px;
+  height: 48px;
+  letter-spacing: 4px;
 }
 
-/* 动态背景修饰 */
+.login-footer {
+  margin-top: 24px;
+  text-align: center;
+  color: var(--text-placeholder);
+  font-size: 12px;
+}
+
+/* 浅色干净的大背景块点缀 */
 .bg-shape {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
   z-index: 1;
-  opacity: 0.5;
-  animation: float 10s infinite ease-in-out alternate;
+  opacity: 0.6;
 }
 
 .shape-1 {
-  width: 400px;
-  height: 400px;
-  background: #667eea;
-  top: -100px;
+  width: 600px;
+  height: 600px;
+  background: #E0E7FF;
+  top: -200px;
   right: -100px;
-  animation-delay: 0s;
 }
 
 .shape-2 {
-  width: 300px;
-  height: 300px;
-  background: #764ba2;
-  bottom: -50px;
-  left: -100px;
-  animation-delay: -2s;
-}
-
-.shape-3 {
-  width: 250px;
-  height: 250px;
-  background: #38f9d7;
-  bottom: 20%;
-  right: 15%;
-  opacity: 0.2;
-  animation-delay: -4s;
-}
-
-@keyframes float {
-  0% { transform: translate(0, 0); }
-  100% { transform: translate(30px, 40px); }
-}
-
-/* 覆盖 input 样式，让登录框更通透 */
-:deep(.el-input__wrapper) {
-  background-color: rgba(30, 42, 58, 0.6) !important;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1) inset !important;
+  width: 500px;
+  height: 500px;
+  background: #E0F2FE;
+  bottom: -150px;
+  left: -150px;
 }
 
 :deep(.el-input__inner) {
