@@ -64,7 +64,7 @@
               </span>
               <el-button
                 type="primary"
-                class="btn-gradient"
+                class="btn-primary-flat"
                 @click="applyProtection"
                 :loading="applying"
                 :disabled="!selectedIds.length"
@@ -187,10 +187,10 @@ function updateRadarChart() {
         { name: '密度分布效用', max: 100 },
         { name: '下游预测价值', max: 100 }
       ],
-      axisName: { color: '#666', fontSize: 13, fontWeight: 'bold' },
-      splitArea: { areaStyle: { color: ['rgba(230, 238, 255, 0.4)', 'rgba(240, 245, 255, 0.3)'] } },
-      splitLine: { lineStyle: { color: 'rgba(200, 215, 240, 0.8)' } },
-      axisLine: { lineStyle: { color: 'rgba(200, 215, 240, 0.8)' } }
+      axisName: { color: '#444', fontSize: 13, fontWeight: 'bold' },
+      splitArea: { show: false },
+      splitLine: { lineStyle: { color: '#EAEAEA', width: 1 } },
+      axisLine: { lineStyle: { color: '#EAEAEA', width: 1 } }
     },
     series: [
       {
@@ -201,13 +201,10 @@ function updateRadarChart() {
             value: [privacyScore, privacyScore * 0.9, privacyScore * 0.95, utilityScore, utilityScore * 0.9, utilityScore * 0.85],
             name: '当前配置面板 (实控属性)',
             areaStyle: {
-              color: new echarts.graphic.RadialGradient(0.5, 0.5, 1, [
-                { color: 'rgba(64, 158, 255, 0.5)', offset: 0 },
-                { color: 'rgba(64, 158, 255, 0.1)', offset: 1 }
-              ])
+              color: 'transparent'
             },
-            lineStyle: { width: 3, color: '#409EFF' },
-            itemStyle: { color: '#409EFF', borderColor: '#fff', borderWidth: 2 }
+            lineStyle: { width: 1.5, color: '#0070F3' },
+            itemStyle: { color: '#0070F3', borderColor: '#fff', borderWidth: 1 }
           }
         ]
       }
@@ -252,29 +249,32 @@ async function loadCompareData() {
           type: 'category',
           name: '隐私预算 ε',
           data: comparisons.map((c: any) => `ε=${c.epsilon}`),
-          axisLabel: { color: '#666' }
+          axisLabel: { color: '#666' },
+          axisLine: { lineStyle: { color: '#EAEAEA' } }
         },
-        yAxis: { type: 'value', name: '噪声幅度 (米)', axisLabel: { color: '#666' } },
+        yAxis: { 
+          type: 'value', 
+          name: '噪声幅度 (米)', 
+          axisLabel: { color: '#666' },
+          splitLine: { show: false }
+        },
         series: [
           {
             name: '噪声标准差 (m)',
             type: 'bar',
             data: comparisons.map((c: any) => c.noiseStdDevMeters),
             itemStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                { offset: 0, color: '#667eea' },
-                { offset: 1, color: '#764ba2' },
-              ]),
-              borderRadius: [4, 4, 0, 0],
+              color: '#333333',
+              borderRadius: [2, 2, 0, 0],
             },
           },
           {
             name: '95%置信区间 (m)',
             type: 'line',
             data: comparisons.map((c: any) => c.ci95Meters),
-            smooth: true,
-            lineStyle: { color: '#f5576c', width: 2 },
-            itemStyle: { color: '#f5576c' },
+            smooth: false,
+            lineStyle: { color: '#0070F3', width: 1.5, type: 'dashed' },
+            itemStyle: { color: '#0070F3' },
           },
         ],
       })

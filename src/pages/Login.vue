@@ -1,12 +1,16 @@
 <template>
   <div class="login-container">
-    <!-- Abstract light background shapes -->
-    <div class="bg-shape shape-1"></div>
-    <div class="bg-shape shape-2"></div>
+    <!-- Top Success Banner -->
+    <div class="logout-banner">已退出登录</div>
 
     <div class="login-box">
       <div class="login-header">
-        <img src="/logo.png" class="logo-img" alt="logo" />
+        <div class="logo-container">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#333333" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="logo-svg">
+            <path d="M12 3 L 4 6 V 11 C 4 16 7 20 12 22 C 17 20 20 16 20 11 V 6 Z" fill="#FFFFFF" />
+            <text x="12" y="15" font-family="serif" font-size="12" font-weight="bold" font-style="italic" text-anchor="middle" fill="#333333" stroke="none">ε</text>
+          </svg>
+        </div>
         <h2>DP-LSTM 隐私保护系统</h2>
         <p>欢迎回到管理控制台</p>
       </div>
@@ -42,7 +46,7 @@
         <el-form-item style="margin-top: 32px;">
           <el-button 
             type="primary" 
-            class="login-btn btn-gradient"
+            class="login-btn btn-black-flat"
             :loading="loading"
             @click="handleLogin"
             size="large"
@@ -113,18 +117,33 @@ const handleLogin = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--bg-dark);
+  background-color: #FFFFFF;
   position: relative;
   overflow: hidden;
+  font-family: 'Inter', sans-serif;
+}
+
+.logout-banner {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background-color: #F0FDF4;
+  color: #166534;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid #DCFCE7;
 }
 
 .login-box {
   width: 440px;
   padding: 48px 40px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  background: #FFFFFF;
+  border: 1px solid #EAEAEA;
+  border-radius: 0;
+  box-shadow: none;
   z-index: 10;
   position: relative;
   display: flex;
@@ -136,73 +155,86 @@ const handleLogin = async () => {
   margin-bottom: 32px;
 }
 
-.logo-img {
-  width: 56px;
-  height: 56px;
-  margin-bottom: 16px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+.logo-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.logo-svg {
+  display: block;
 }
 
 .login-header h2 {
-  font-size: 22px;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  font-weight: 600;
-  letter-spacing: 0.5px;
+  font-size: 24px;
+  color: #111111;
+  margin-bottom: 12px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
 }
 
 .login-header p {
-  color: var(--text-secondary);
+  color: #888888;
   font-size: 14px;
 }
 
 .login-form {
-  margin-top: 8px;
+  margin-top: 16px;
+}
+
+.btn-black-flat {
+  background: #000000 !important;
+  border: 1px solid #000000 !important;
+  color: #FFFFFF !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  transition: opacity 0.2s ease;
+}
+.btn-black-flat:hover {
+  opacity: 0.85;
 }
 
 .login-btn {
   width: 100%;
-  font-size: 16px;
-  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
   height: 48px;
-  letter-spacing: 4px;
+  letter-spacing: 2px;
 }
 
 .login-footer {
-  margin-top: 24px;
+  margin-top: 32px;
   text-align: center;
-  color: var(--text-placeholder);
+  color: #AAAAAA;
   font-size: 12px;
+  letter-spacing: 0.5px;
 }
 
-/* 浅色干净的大背景块点缀 */
+/* 去除不需要的发光背景，保留纯净留白 */
 .bg-shape {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  z-index: 1;
-  opacity: 0.6;
+  display: none;
 }
 
-.shape-1 {
-  width: 600px;
-  height: 600px;
-  background: #E0E7FF;
-  top: -200px;
-  right: -100px;
+/* 极致扁平下划线输入框 */
+:deep(.el-input__wrapper) {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid #EAEAEA !important;
+  padding: 0 4px !important;
+  transition: border-color 0.2s ease;
 }
-
-.shape-2 {
-  width: 500px;
-  height: 500px;
-  background: #E0F2FE;
-  bottom: -150px;
-  left: -150px;
+:deep(.el-input__wrapper.is-focus) {
+  border-bottom: 1px solid #111111 !important;
 }
-
 :deep(.el-input__inner) {
   height: 44px;
+  color: #111111 !important;
+}
+:deep(.el-input__inner::placeholder) {
+  color: #BBBBBB !important;
+}
+:deep(.el-icon) {
+  color: #666666 !important;
 }
 </style>

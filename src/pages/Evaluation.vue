@@ -16,7 +16,7 @@
               <el-input-number v-model="kThreshold" :min="100" :max="10000" :step="100" controls-position="right" style="width: 100%;" />
             </el-form-item>
             <el-form-item style="margin-top: 20px;">
-              <el-button type="primary" class="btn-gradient" @click="runEvaluation" :loading="running" style="width: 100%; height: 40px; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 15px rgba(64,158,255,0.3);">
+              <el-button type="primary" class="btn-primary-flat" @click="runEvaluation" :loading="running" style="width: 100%; height: 40px; border-radius: 6px;">
                 <el-icon style="margin-right: 6px;"><DataAnalysis /></el-icon>
                 运行深度攻防测试评估
               </el-button>
@@ -68,7 +68,7 @@
       <!-- 趋势图表与攻防大屏 -->
       <el-col :span="16">
         <!-- 攻防推演状态面板 (新增核心卖点) -->
-        <el-card style="margin-bottom: 20px; background: linear-gradient(135deg, #ffffff 0%, #f4f6fa 100%);">
+        <el-card style="margin-bottom: 20px; border-color: #EAEAEA;">
           <div style="display: flex; justify-content: space-between; align-items: center; color: #333;">
             <div>
               <div style="font-size: 14px; color: #666; margin-bottom: 8px; font-weight: bold;">[互动沙盘] 成员推断(MIA)攻防推演评估</div>
@@ -179,13 +179,12 @@ function shieldStyle(risk?: number) {
   }
   const isSafe = risk < 0.2
   return {
-    width: '60px',
-    height: '60px',
-    borderRadius: '10px 10px 30px 30px',
-    background: isSafe ? 'rgba(103, 194, 58, 0.1)' : 'rgba(245, 108, 108, 0.1)',
-    border: `3px solid ${isSafe ? '#67C23A' : '#F56C6C'}`,
-    boxShadow: `0 0 15px ${isSafe ? 'rgba(103, 194, 58, 0.4)' : 'rgba(245, 108, 108, 0.4)'}`,
-    transition: 'all 0.5s ease'
+    width: '50px',
+    height: '50px',
+    borderRadius: '8px 8px 24px 24px',
+    background: isSafe ? '#FAFAFA' : '#FAFAFA',
+    border: `2px solid ${isSafe ? '#111111' : '#E00'}`,
+    transition: 'all 0.2s ease'
   }
 }
 
@@ -254,43 +253,44 @@ async function loadBatchCompare() {
         xAxis: {
           type: 'category',
           data: validData.map((c: any) => `ε=${c.epsilon}`),
-          axisLabel: { color: '#666' }
+          axisLabel: { color: '#666' },
+          axisLine: { lineStyle: { color: '#EAEAEA' } }
         },
         yAxis: [
-          { type: 'value', name: '分数/比例 %', position: 'left', axisLabel: { color: '#666' } },
-          { type: 'value', name: 'DTW 距离', position: 'right', axisLabel: { color: '#666' } },
+          { type: 'value', name: '分数/比例 %', position: 'left', splitLine: { show: false }, axisLabel: { color: '#666' } },
+          { type: 'value', name: 'DTW 距离', position: 'right', splitLine: { show: false }, axisLabel: { color: '#666' } },
         ],
         series: [
           {
             name: '位置熵(安全)',
             type: 'bar',
             data: validData.map((c: any) => c.locationEntropy),
-            itemStyle: { color: '#43e97b', borderRadius: [4, 4, 0, 0] },
+            itemStyle: { color: '#333333', borderRadius: [2, 2, 0, 0] },
           },
           {
             name: 'MIA(安全)',
             type: 'line',
             data: validData.map((c: any) => c.reIdentificationRisk !== undefined ? (c.reIdentificationRisk * 100).toFixed(1) : 0),
-            smooth: true,
-            lineStyle: { color: '#00d2ff', width: 2, type: 'dashed' },
-            itemStyle: { color: '#00d2ff' },
+            smooth: false,
+            lineStyle: { color: '#0070F3', width: 1.5, type: 'dashed' },
+            itemStyle: { color: '#0070F3', borderWidth: 1 }
           },
           {
             name: 'DTW(差距)',
             type: 'line',
             yAxisIndex: 1,
             data: validData.map((c: any) => c.trajectoryDtw),
-            smooth: true,
-            lineStyle: { color: '#f5576c', width: 2 },
-            itemStyle: { color: '#f5576c' },
+            smooth: false,
+            lineStyle: { color: '#111111', width: 1.5 },
+            itemStyle: { color: '#111111', borderWidth: 1 }
           },
           {
             name: '范围误差(差距)',
             type: 'line',
             data: validData.map((c: any) => c.rangeQueryError !== undefined ? (c.rangeQueryError * 100).toFixed(1) : 0),
-            smooth: true,
-            lineStyle: { color: '#f6d365', width: 2 },
-            itemStyle: { color: '#f6d365' },
+            smooth: false,
+            lineStyle: { color: '#888888', width: 1.5, type: 'dotted' },
+            itemStyle: { color: '#888888', borderWidth: 1 }
           },
         ],
       })
@@ -315,33 +315,36 @@ function updateChart() {
     xAxis: {
       type: 'category',
       data: sorted.map((r: any) => `ID:${r.id}`),
-      axisLabel: { color: '#666' }
+      axisLabel: { color: '#666' },
+      axisLine: { lineStyle: { color: '#EAEAEA' } }
     },
     yAxis: [
-      { type: 'value', name: '熵 / K-匿名', position: 'left', axisLabel: { color: '#666' } },
-      { type: 'value', name: 'DTW 距离', position: 'right', axisLabel: { color: '#666' } },
+      { type: 'value', name: '熵 / K-匿名', position: 'left', splitLine: { show: false }, axisLabel: { color: '#666' } },
+      { type: 'value', name: 'DTW 距离', position: 'right', splitLine: { show: false }, axisLabel: { color: '#666' } },
     ],
     series: [
       {
         name: '位置熵',
         type: 'line',
         data: sorted.map((r: any) => r.locationEntropy),
-        smooth: true,
-        itemStyle: { color: '#43e97b' },
+        smooth: false,
+        lineStyle: { color: '#111111', width: 1.5 },
+        itemStyle: { color: '#111111' },
       },
       {
         name: 'DTW 距离',
         type: 'line',
         yAxisIndex: 1,
         data: sorted.map((r: any) => r.trajectoryDtw),
-        smooth: true,
-        itemStyle: { color: '#f5576c' },
+        smooth: false,
+        lineStyle: { color: '#888888', width: 1.5, type: 'dashed' },
+        itemStyle: { color: '#888888' },
       },
       {
         name: 'K-匿名度',
         type: 'bar',
         data: sorted.map((r: any) => r.kAnonymity),
-        itemStyle: { color: '#667eea', borderRadius: [4, 4, 0, 0] },
+        itemStyle: { color: '#0070F3', borderRadius: [2, 2, 0, 0] },
       },
     ],
   })

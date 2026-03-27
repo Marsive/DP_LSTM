@@ -1,26 +1,26 @@
 /* ===== 全局样式与 B端设计 Token ===== */
 :root {
   /* 品牌色与状态色 */
-  --primary-color: #4F7CFF;
-  --success-color: #10B981;
-  --warning-color: #F59E0B;
-  --danger-color: #EF4444;
-  --info-color: #0EA5E9;
+  --primary-color: #0070F3; /* Vercel 经典科技蓝 */
+  --success-color: #007A5A;
+  --warning-color: #F5A623;
+  --danger-color: #E00;
+  --info-color: #0070F3;
   
   /* 灰度与背景体系 */
-  --bg-dark: #F6F8FC;     /* 页面底色 */
-  --bg-card: #FFFFFF;     /* 卡片底色 */
-  --bg-card-hover: #F8FAFC;
-  --border-color: #E5EAF2;
+  --bg-dark: #FFFFFF;     /* 全局纯白大背景 */
+  --bg-card: #FFFFFF;     /* 卡片同底色，靠边线区分 */
+  --bg-card-hover: #FAFAFA;
+  --border-color: #EAEAEA; /* 细腻的 1px 亮灰实边 */
   
-  /* 文字层级 */
-  --text-primary: #0F172A; /* 大标题、主数字 */
-  --text-regular: #334155; /* 正文文本 */
-  --text-secondary: #64748B; /* 次要描述、标签 */
+  /* 文字层级：深炭黑超高对比度 */
+  --text-primary: #111111; 
+  --text-regular: #444444; 
+  --text-secondary: #888888; 
   
-  /* 阴影与圆角 */
-  --shadow-card: 0 2px 12px rgba(15, 23, 42, 0.03);
-  --shadow-hover: 0 8px 24px rgba(15, 23, 42, 0.08);
+  /* 严格禁止阴影设计（极简主义） */
+  --shadow-card: none;
+  --shadow-hover: none;
 
   /* ===== Element Plus 全局 Token 覆盖 ===== */
   --el-color-primary: var(--primary-color);
@@ -35,9 +35,9 @@
   --el-fill-color-blank: var(--bg-card);
   
   --el-border-color: var(--border-color);
-  --el-border-color-light: #F1F5F9;
+  --el-border-color-light: #F5F5F5;
   
-  --el-border-radius-base: 8px;
+  --el-border-radius-base: 6px; /* 更锐利的切角 */
 }
 
 * {
@@ -47,7 +47,9 @@
 }
 
 body {
-  font-family: 'Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   background-color: var(--bg-dark);
   color: var(--text-regular);
   min-height: 100vh;
@@ -61,13 +63,14 @@ body {
 .el-card {
   background-color: var(--bg-card) !important;
   border: 1px solid var(--border-color) !important;
-  border-radius: 12px !important;
-  box-shadow: var(--shadow-card) !important;
-  transition: all 0.3s ease;
+  border-radius: 6px !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s ease;
 }
 
 .el-card:hover {
-  box-shadow: var(--shadow-hover) !important;
+  border-color: #CCCCCC !important;
+  box-shadow: none !important;
 }
 
 .el-card__header {
@@ -80,10 +83,15 @@ body {
 /* ===== 表单重置 (去掉强制深色) ===== */
 .el-input__wrapper,
 .el-textarea__wrapper {
-  background-color: #FFFFFF !important;
-  box-shadow: 0 0 0 1px var(--border-color) inset !important;
+  background-color: #FAFAFA !important;
+  box-shadow: 0 0 0 1px transparent inset !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease;
 }
 .el-input__wrapper.is-focus {
+  background-color: #FFFFFF !important;
+  border-color: var(--primary-color) !important;
   box-shadow: 0 0 0 1px var(--primary-color) inset !important;
 }
 .el-input__inner,
@@ -130,17 +138,21 @@ body {
 /* ===== 按钮风格化 ===== */
 .el-button {
   font-weight: 500;
-  border-radius: 8px !important;
+  border-radius: 6px !important;
+  box-shadow: none !important;
 }
-.btn-gradient {
+.btn-primary-flat {
   background: var(--primary-color) !important;
-  border: none !important;
+  border: 1px solid var(--primary-color) !important;
   color: white !important;
-  transition: all 0.3s ease;
+  box-shadow: none !important;
+  transition: background 0.2s ease;
 }
-.btn-gradient:hover {
-  opacity: 0.9;
-  box-shadow: 0 4px 12px rgba(79, 124, 255, 0.25);
+.btn-primary-flat:hover {
+  background: #005bb5 !important;
+  border-color: #005bb5 !important;
+  opacity: 1;
+  box-shadow: none !important;
 }
 
 /* ===== 深色图表与地图的备用还原 ===== */

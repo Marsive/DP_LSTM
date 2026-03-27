@@ -11,7 +11,7 @@
     <!-- 侧边栏 -->
     <aside class="sidebar">
       <div class="sidebar-logo">
-        <img src="/logo.png" alt="logo" class="logo-img-small" />
+        <CustomIcons name="logo" class="logo-custom" />
         <span class="logo-text">DP-LSTM 分析台</span>
       </div>
       <el-menu
@@ -24,8 +24,8 @@
           :key="route.path"
           :index="route.path"
         >
-          <el-icon><component :is="route.meta.icon" /></el-icon>
-          <span>{{ route.meta.title }}</span>
+          <CustomIcons :name="String(route.meta.icon)" style="margin-right: 14px;" />
+          <span class="menu-title">{{ route.meta.title }}</span>
         </el-menu-item>
       </el-menu>
     </aside>
@@ -72,6 +72,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { UserFilled, ArrowDown } from '@element-plus/icons-vue'
 
+import CustomIcons from './components/CustomIcons.vue'
+
 const route = useRoute()
 const router = useRouter()
 const currentRoute = computed(() => route.path)
@@ -79,11 +81,11 @@ const currentTitle = computed(() => (route.meta?.title as string) || '总控台'
 const username = computed(() => localStorage.getItem('username') || 'admin')
 
 const menuRoutes = [
-  { path: '/dashboard', meta: { title: '总控台', icon: 'Odometer' } },
-  { path: '/data-simulation', meta: { title: '数据模拟', icon: 'MapLocation' } },
-  { path: '/privacy-protection', meta: { title: '隐私保护', icon: 'Lock' } },
-  { path: '/model-training', meta: { title: '模型训练', icon: 'Cpu' } },
-  { path: '/evaluation', meta: { title: '效果评估', icon: 'DataAnalysis' } },
+  { path: '/dashboard', meta: { title: '总控台', icon: 'dashboard' } },
+  { path: '/data-simulation', meta: { title: '数据模拟', icon: 'data-sim' } },
+  { path: '/privacy-protection', meta: { title: '隐私保护', icon: 'privacy' } },
+  { path: '/model-training', meta: { title: '模型训练', icon: 'model' } },
+  { path: '/evaluation', meta: { title: '效果评估', icon: 'eval' } },
 ]
 
 const handleCommand = (command: string) => {
@@ -113,13 +115,11 @@ const handleCommand = (command: string) => {
   border-bottom: 1px solid var(--border-color);
 }
 
-.logo-img-small {
+.logo-custom {
   width: 28px;
   height: 28px;
   margin-right: 12px;
-  border-radius: 6px;
-  object-fit: cover;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  color: var(--text-primary);
 }
 
 .logo-text {
@@ -134,24 +134,36 @@ const handleCommand = (command: string) => {
 }
 
 .sidebar-menu .el-menu-item {
-  height: 44px;
-  line-height: 44px;
-  margin-bottom: 4px;
-  border-radius: 8px;
+  height: 48px;
+  line-height: 48px;
+  margin-bottom: 6px;
+  border-radius: 0 8px 8px 0;
+  border-left: 2px solid transparent;
   font-size: 14px;
   color: var(--text-secondary) !important;
   transition: all 0.2s;
+  padding-left: 18px !important;
+  background-color: transparent !important;
 }
 
 .sidebar-menu .el-menu-item:hover {
-  background-color: #F8FAFC !important;
+  background-color: #FAFAFA !important;
   color: var(--text-primary) !important;
 }
 
+.menu-title {
+  letter-spacing: 0.5px;
+}
+
 .sidebar-menu .el-menu-item.is-active {
-  background-color: #EEF2FF !important;
-  color: var(--primary-color) !important;
-  font-weight: 500;
+  background-color: #FAFAFA !important;
+  color: var(--text-primary) !important;
+  border-left: 2px solid var(--primary-color);
+  font-weight: 700;
+}
+
+.sidebar-menu .el-menu-item.is-active .menu-title {
+  font-weight: 700;
 }
 
 .top-bar {
@@ -175,24 +187,28 @@ const handleCommand = (command: string) => {
   align-items: center;
   cursor: pointer;
   padding: 4px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border-color);
-  transition: background-color 0.3s;
+  border-radius: 0;
+  border: 1px solid #EAEAEA;
+  background-color: #FFFFFF;
+  transition: border-color 0.2s, background-color 0.2s;
 }
 
 .user-dropdown:hover {
-  background-color: #F8FAFC;
+  background-color: #FAFAFA;
+  border-color: #CCCCCC;
 }
 
 .user-avatar {
-  background-color: #EEF2FF;
-  color: var(--primary-color);
+  background-color: transparent !important;
+  color: #111111 !important;
   margin-right: 8px;
+  border-radius: 0 !important;
 }
 
 .username {
-  color: var(--text-regular);
+  color: #111111;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 700;
+  margin-right: 6px;
 }
 </style>

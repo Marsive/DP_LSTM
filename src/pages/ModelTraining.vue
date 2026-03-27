@@ -41,7 +41,7 @@
             <el-form-item>
               <el-button
                 type="primary"
-                class="btn-gradient"
+                class="btn-primary-flat"
                 @click="startTraining"
                 :loading="isTraining"
                 :disabled="isTraining"

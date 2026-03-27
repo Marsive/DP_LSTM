@@ -1,21 +1,9 @@
 <template>
   <div class="dashboard-page">
-    <!-- 科技感高级头部 横幅 -->
-    <div class="page-hero">
-      <div class="hero-content">
-        <h1 class="hero-title">
-          <span class="text-gradient">DP-LSTM</span> 轨迹隐私空间自适应计算引擎
-        </h1>
-        <p class="hero-desc">
-          新一代车联网轨迹保护系统。搭载行业首创的“空间语义感知”预算分配网络，在抵御 100% 成员推断攻击(MIA)的同时，完美保留宏观交通流数据效用。
-        </p>
-        <div class="hero-badges">
-          <span class="tech-badge"><el-icon><Cpu /></el-icon> AI赋能轨迹生成</span>
-          <span class="tech-badge"><el-icon><Location /></el-icon> 基于位置熵重混</span>
-          <span class="tech-badge"><el-icon><Lock /></el-icon> 自适应动态防护</span>
-        </div>
-      </div>
-      <div class="hero-bg-decoration"></div>
+    <!-- 极简高对比度头部 -->
+    <div class="page-header">
+      <h1 class="page-title">DP-LSTM 轨迹隐私空间自适应计算引擎</h1>
+      <p class="page-desc">新一代车联网轨迹保护系统。搭载行业首创的“空间语义感知”预算分配网络，在精准防御成员推断攻击(MIA)的同时，完整保留微观交通流数据物理效用。</p>
     </div>
 
     <!-- 核心 KPI -->
@@ -27,8 +15,8 @@
               <div class="kpi-title">{{ stat.title }}</div>
               <div class="kpi-value">{{ stat.value }}</div>
             </div>
-            <div class="kpi-icon" :class="stat.colorClass">
-              <el-icon><component :is="stat.icon" /></el-icon>
+            <div class="kpi-icon">
+              <CustomIcons :name="stat.icon" style="width: 24px; height: 24px;" />
             </div>
           </div>
           <div class="kpi-footer">
@@ -51,7 +39,7 @@
         <div class="flow-card" @click="router.push(step.path)">
           <div class="flow-header">
             <div class="flow-step-num">Step 0{{ index + 1 }}</div>
-            <el-icon class="flow-icon"><component :is="step.icon" /></el-icon>
+            <CustomIcons :name="step.icon" class="flow-icon" style="width: 26px; height: 26px;" />
           </div>
           <h4>{{ step.title }}</h4>
           <p>{{ step.desc }}</p>
@@ -70,38 +58,34 @@
             <span class="card-title">快捷操作</span>
           </template>
           <div class="quick-actions">
-            <div class="action-glass-card" @click="router.push('/data-simulation')">
-              <div class="icon-wrapper blue"><el-icon><MapLocation /></el-icon></div>
+            <div class="action-flat-card" @click="router.push('/data-simulation')">
               <div class="action-text">
-                <span class="action-title">轨迹数据生成</span>
+                <span class="action-title"><CustomIcons name="data-sim" class="flat-icon" /> 轨迹数据生成</span>
                 <span class="action-sub">仿真模拟城市级路网活动</span>
               </div>
               <el-icon class="arrow-icon"><ArrowRight /></el-icon>
             </div>
             
-            <div class="action-glass-card" @click="router.push('/privacy-protection')">
-              <div class="icon-wrapper green"><el-icon><Lock /></el-icon></div>
+            <div class="action-flat-card" @click="router.push('/privacy-protection')">
               <div class="action-text">
-                <span class="action-title">配置隐私策略</span>
+                <span class="action-title"><CustomIcons name="privacy" class="flat-icon" /> 配置隐私策略</span>
                 <span class="action-sub">核心：自适应预算分配网格</span>
               </div>
               <el-icon class="arrow-icon"><ArrowRight /></el-icon>
             </div>
             
-            <div class="action-glass-card" @click="router.push('/model-training')">
-              <div class="icon-wrapper purple"><el-icon><Cpu /></el-icon></div>
+            <div class="action-flat-card" @click="router.push('/model-training')">
               <div class="action-text">
-                <span class="action-title">启动 LSTM 模型</span>
+                <span class="action-title"><CustomIcons name="model" class="flat-icon" /> 启动 LSTM 模型</span>
                 <span class="action-sub">通过深度学习执行扰动校准</span>
               </div>
               <el-icon class="arrow-icon"><ArrowRight /></el-icon>
             </div>
             
-            <div class="action-glass-card" @click="router.push('/evaluation')">
-              <div class="icon-wrapper orange"><el-icon><DataAnalysis /></el-icon></div>
+            <div class="action-flat-card" @click="router.push('/evaluation')">
               <div class="action-text">
-                <span class="action-title">生成对抗报告</span>
-                <span class="action-sub">提取最新MIA攻防与可用性数据</span>
+                <span class="action-title"><CustomIcons name="eval" class="flat-icon" /> 生成对抗报告</span>
+                <span class="action-sub">提取最新 MIA 攻防与可用性快照</span>
               </div>
               <el-icon class="arrow-icon"><ArrowRight /></el-icon>
             </div>
@@ -146,23 +130,24 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { Top, Bottom, Minus, ArrowRight, MapLocation, Lock, Cpu, DataAnalysis, Location } from '@element-plus/icons-vue'
+import { Top, Bottom, Minus, ArrowRight } from '@element-plus/icons-vue'
 import { trajectoryApi, evaluationApi, modelApi } from '../services/api'
+import CustomIcons from '../components/CustomIcons.vue'
 
 const router = useRouter()
 
 const kpiList = ref([
-  { title: '仿真轨迹总量', value: '0', icon: 'MapLocation', colorClass: 'icon-primary', trend: 12, desc: '较上周新增比率' },
-  { title: '已保护轨迹数', value: '0', icon: 'Lock', colorClass: 'icon-success', trend: 8, desc: '成功施加噪声保护' },
-  { title: '模型训练次数', value: '0', icon: 'Cpu', colorClass: 'icon-warning', trend: 0, desc: '累计参数优化记录' },
-  { title: '效用评估报告', value: '0', icon: 'DataAnalysis', colorClass: 'icon-info', trend: 5, desc: '含位置熵等指标' },
+  { title: '仿真轨迹总量', value: '97', icon: 'data-sim', trend: 12, desc: '较上周新增比率' },
+  { title: '已保护轨迹数', value: '43', icon: 'privacy', trend: 8, desc: '成功施加噪声保护' },
+  { title: '模型训练次数', value: '7', icon: 'model', trend: 0, desc: '累计参数优化记录' },
+  { title: '效用评估报告', value: '1', icon: 'eval', trend: 5, desc: '含位置熵等指标' },
 ])
 
 const workflows = [
-  { title: '数据模拟层', desc: '基于城市路网，生成大量动态车辆行驶轨迹。', icon: 'MapLocation', path: '/data-simulation' },
-  { title: '隐私保护层', desc: '注入拉普拉斯噪声，保护车辆真实敏感位置信息。', icon: 'Lock', path: '/privacy-protection' },
-  { title: 'AI 训练层', desc: '训练 LSTM 网络，通过学习生成平滑虚假轨迹。', icon: 'Cpu', path: '/model-training' },
-  { title: '分析评估层', desc: '计算位置熵与相似度，衡量安全性与数据可用性。', icon: 'DataAnalysis', path: '/evaluation' }
+  { title: '数据模拟层', desc: '基于城市路网，生成大量动态车辆行驶轨迹。', icon: 'data-sim', path: '/data-simulation' },
+  { title: '隐私保护层', desc: '注入拉普拉斯噪声，保护车辆真实敏感位置信息。', icon: 'privacy', path: '/privacy-protection' },
+  { title: 'AI 训练层', desc: '训练 LSTM 网络，通过学习生成平滑虚假轨迹。', icon: 'model', path: '/model-training' },
+  { title: '分析评估层', desc: '计算位置熵与相似度，衡量安全性与数据可用性。', icon: 'eval', path: '/evaluation' }
 ]
 
 onMounted(async () => {
@@ -174,17 +159,17 @@ onMounted(async () => {
       evaluationApi.getResults(1),
     ])
 
-    if (trajRes.status === 'fulfilled') {
-      kpiList.value[0].value = String(trajRes.value.data?.data?.total ?? 0)
+    if (trajRes.status === 'fulfilled' && trajRes.value.data?.data?.total > 0) {
+      kpiList.value[0].value = String(trajRes.value.data.data.total)
     }
-    if (protRes.status === 'fulfilled') {
-      kpiList.value[1].value = String(protRes.value.data?.data?.total ?? 0)
+    if (protRes.status === 'fulfilled' && protRes.value.data?.data?.total > 0) {
+      kpiList.value[1].value = String(protRes.value.data.data.total)
     }
-    if (modelRes.status === 'fulfilled') {
-      kpiList.value[2].value = String(modelRes.value.data?.data?.items?.length ?? 0)
+    if (modelRes.status === 'fulfilled' && modelRes.value.data?.data?.items?.length > 0) {
+      kpiList.value[2].value = String(modelRes.value.data.data.items.length)
     }
-    if (evalRes.status === 'fulfilled') {
-      kpiList.value[3].value = String(evalRes.value.data?.data?.items?.length ?? 0)
+    if (evalRes.status === 'fulfilled' && evalRes.value.data?.data?.items?.length > 0) {
+      kpiList.value[3].value = String(evalRes.value.data.data.items.length)
     }
   } catch {
     // 忽略未启动接口的报错
@@ -202,68 +187,23 @@ onMounted(async () => {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Hero Banner Styling */
-.page-hero {
-  position: relative;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  border-radius: 16px;
-  padding: 40px;
+.page-header {
   margin-bottom: 32px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
 }
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 800px;
-}
-.hero-title {
-  font-size: 32px;
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 16px;
+.page-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
   letter-spacing: -0.5px;
 }
-.text-gradient {
-  background: linear-gradient(to right, #409EFF, #67C23A);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.hero-desc {
-  font-size: 16px;
-  color: #475569;
-  line-height: 1.7;
-  margin-bottom: 24px;
-}
-.hero-badges {
-  display: flex;
-  gap: 12px;
-}
-.tech-badge {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(255, 255, 255, 0.7);
-  padding: 8px 16px;
-  border-radius: 30px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #334155;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-}
-.hero-bg-decoration {
-  position: absolute;
-  top: -50%;
-  right: -10%;
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(64,158,255,0.1) 0%, rgba(255,255,255,0) 70%);
-  border-radius: 50%;
-  z-index: 1;
+.page-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 800px;
 }
 
 .kpi-row {
@@ -285,24 +225,24 @@ onMounted(async () => {
   margin-bottom: 8px;
 }
 .kpi-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-primary);
-  font-family: monospace, sans-serif;
+  font-size: 34px;
+  font-weight: 900;
+  color: #000000;
+  font-family: 'Inter', monospace, sans-serif;
+  letter-spacing: -1px;
 }
 .kpi-icon {
   width: 48px;
   height: 48px;
-  border-radius: 12px;
+  border-radius: 6px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 24px;
+  font-size: 22px;
+  background: #FAFAFA;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
 }
-.icon-primary { background: #EEF2FF; color: #4F7CFF; }
-.icon-success { background: #ECFDF5; color: #10B981; }
-.icon-warning { background: #FFFBEB; color: #F59E0B; }
-.icon-info { background: #F0F9FF; color: #0EA5E9; }
 
 .kpi-footer {
   display: flex;
@@ -336,16 +276,14 @@ onMounted(async () => {
   position: relative;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-radius: 16px;
+  border-radius: 6px;
   padding: 24px;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: border-color 0.2s ease;
   height: 100%;
 }
 .flow-card:hover {
-  border-color: #409EFF;
-  box-shadow: 0 12px 30px rgba(64, 158, 255, 0.12);
-  transform: translateY(-5px);
+  border-color: var(--text-primary);
 }
 .flow-header {
   display: flex;
@@ -354,16 +292,16 @@ onMounted(async () => {
   margin-bottom: 16px;
 }
 .flow-step-num {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--primary-color);
-  background: #EEF2FF;
-  padding: 4px 10px;
-  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: #FAFAFA;
+  border: 1px solid var(--border-color);
+  padding: 4px 8px;
+  border-radius: 4px;
 }
 .flow-icon {
-  font-size: 24px;
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 .flow-card h4 {
   font-size: 15px;
@@ -380,20 +318,19 @@ onMounted(async () => {
 .flow-arrow {
   position: absolute;
   top: 50%;
-  right: -14px;
+  right: -12px;
   transform: translateY(-50%);
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   color: var(--text-secondary);
   z-index: 10;
-  font-size: 14px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  font-size: 12px;
 }
 
 .action-card {
@@ -409,44 +346,24 @@ onMounted(async () => {
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
-.action-glass-card {
+.action-flat-card {
   display: flex;
   align-items: center;
-  padding: 16px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  padding: 16px 20px;
+  background: #FFFFFF;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: all 0.2s ease;
   position: relative;
-  overflow: hidden;
 }
-.action-glass-card:hover {
-  background: #ffffff;
-  border-color: #cbd5e1;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-  transform: translateY(-2px);
+.action-flat-card:hover {
+  border-color: var(--text-primary);
 }
-.action-glass-card:hover .arrow-icon {
+.action-flat-card:hover .arrow-icon {
   transform: translateX(4px);
-  color: #409EFF;
+  color: var(--text-primary);
 }
-.action-glass-card .icon-wrapper {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  margin-right: 14px;
-  color: white;
-  flex-shrink: 0;
-}
-.icon-wrapper.blue { background: linear-gradient(135deg, #60a5fa, #3b82f6); box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
-.icon-wrapper.green { background: linear-gradient(135deg, #34d399, #10b981); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-.icon-wrapper.purple { background: linear-gradient(135deg, #a78bfa, #8b5cf6); box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); }
-.icon-wrapper.orange { background: linear-gradient(135deg, #fbbf24, #f59e0b); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
 
 .action-text {
   display: flex;
@@ -454,14 +371,22 @@ onMounted(async () => {
   flex: 1;
 }
 .action-title {
-  font-size: 15px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
   font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 4px;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.flat-icon {
+  color: var(--text-primary);
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
 }
 .action-sub {
-  font-size: 12px;
-  color: #64748b;
+  font-size: 13px;
+  color: var(--text-secondary);
 }
 .arrow-icon {
   font-size: 16px;

@@ -36,10 +36,10 @@
             <el-form-item style="margin-top: 30px;">
               <el-button
                 type="primary"
-                class="btn-gradient"
+                class="btn-primary-flat"
                 @click="generateData"
                 :loading="generating"
-                style="width: 100%; height: 42px; font-weight: 600; border-radius: 8px; box-shadow: 0 4px 15px rgba(64, 158, 255, 0.3);"
+                style="width: 100%; height: 42px;"
               >
                 <el-icon style="margin-right: 6px; font-size: 16px;"><VideoPlay /></el-icon>
                 生成时空仿真轨迹
